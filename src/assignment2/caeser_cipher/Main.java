@@ -3,6 +3,7 @@ package assignment2.caeser_cipher;
 import assignment2.caeser_cipher.util.FileInDictionary;
 import assignment2.caeser_cipher.util.Generator;
 import assignment2.caeser_cipher.util.TextBuilder;
+import assignment2.caeser_cipher.util.Timer;
 
 import java.io.IOException;
 
@@ -43,5 +44,6 @@ public class Main {
 
         System.out.println("평문: " + plainText.toString());
         System.out.println("복호화된암호: " + result);
+        System.out.println("경과시간(ms) : " + Timer.calculateTotal());
     }
 }

@@ -3,6 +3,7 @@ package assignment2.caeser_cipher;
 import assignment2.caeser_cipher.util.FileInDictionary;
 import assignment2.caeser_cipher.util.Shifter;
 import assignment2.caeser_cipher.util.TextBuilder;
+import assignment2.caeser_cipher.util.Timer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,6 +36,8 @@ public class Cracker {
 
     public String crack(StringBuilder cipherText, FileInDictionary fileInDictionary) throws IOException {
 
+        Timer.setBeforeTime(System.currentTimeMillis());
+
         String text = cipherText.toString();
         List<String> candidate = new ArrayList<>();
 
@@ -53,6 +56,7 @@ public class Cracker {
         }
 
         String result = validateInDictionary(candidate, fileInDictionary);
+
         return result;
     }
 
@@ -74,6 +78,7 @@ public class Cracker {
         Integer max = Collections.max(frequencyList); //최대 빈도수 (후보군 중에서 사전에 있는 단어를 가장 많이 포함한 '특정될 디코딩된 암호')
         int resultIndex = frequencyList.indexOf(max);
 
+        Timer.setAfterTime(System.currentTimeMillis());
         return candidates.get(resultIndex);
     }
 }
