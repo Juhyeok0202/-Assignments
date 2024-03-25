@@ -8,14 +8,14 @@ public class Cracker {
     static int COL;
     static int ROW;
     public static String crack(String cipherText, int workUnit, int paddedVal) {
-        Timer.setBeforeTime(System.currentTimeMillis());
+        Timer.setBeforeTime(System.nanoTime());
 
         COL = workUnit;
         ROW = cipherText.length() / workUnit;
 
         String decodedText = readDecodedText(restoreMatrix(cipherText.toCharArray()), paddedVal);
 
-        Timer.setAfterTime(System.currentTimeMillis());
+        Timer.setAfterTime(System.nanoTime());
         return decodedText;
     }
 

@@ -6,7 +6,7 @@ public class Timer {
     private static long afterTime;
 
     public static long calculateTotal() {
-        return afterTime - beforeTime;
+        return (afterTime - beforeTime);
     }
 
     public static long getBeforeTime() {
