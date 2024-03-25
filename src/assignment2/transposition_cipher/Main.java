@@ -9,6 +9,7 @@ package assignment2.transposition_cipher;
 import assignment2.caeser_cipher.util.FileInDictionary;
 import assignment2.transposition_cipher.util.Generator;
 import assignment2.transposition_cipher.util.TextBuilder;
+import assignment2.transposition_cipher.util.Timer;
 
 import java.io.IOException;
 
@@ -46,6 +47,9 @@ public class Main {
         } else {
             System.out.println("크래킹 실패...");
         }
+
+        //time pnt
+        System.out.println("경과시간(ms) : " + Timer.calculateTotal());
     }
 
 }

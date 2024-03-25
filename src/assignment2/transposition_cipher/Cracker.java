@@ -1,17 +1,21 @@
 package assignment2.transposition_cipher;
 
+import assignment2.transposition_cipher.util.Timer;
+
 public class Cracker {
 
     // TODO: 최종적으로 padding된 z를 빼주어야함.
     static int COL;
     static int ROW;
     public static String crack(String cipherText, int workUnit, int paddedVal) {
+        Timer.setBeforeTime(System.currentTimeMillis());
+
         COL = workUnit;
         ROW = cipherText.length() / workUnit;
 
         String decodedText = readDecodedText(restoreMatrix(cipherText.toCharArray()), paddedVal);
 
-
+        Timer.setAfterTime(System.currentTimeMillis());
         return decodedText;
     }
 
