@@ -46,7 +46,7 @@ public class Cracker {
 
             //힌트가 주어진 경우에는 후보군 리스트 addition을 하지 않고, hint로 시작하는 Text만 찾는다.
             if (!hint.isEmpty()) {
-                //TODO: 이것들만 있는 후보군을 모아.
+                //hint로 시작되는 Text만으로 이루어진 후보군 리스트를 만들어낸다. => 후보군 리스트 사이즈 대폭 감소
                 if (sb.toString().startsWith(hint)) {
                     decodedText = sb.toString();
                     candidates.add(decodedText);
