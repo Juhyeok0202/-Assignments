@@ -23,7 +23,7 @@ public class Cracker {
         // Cipher Text 2D 배열( trans :  Column By Colum )
         char[][] matrixFromCipherText = writeColByCol(cipherText.toCharArray());
 
-        //WORK UNIT 길이의 자리바꿈 맵 브루트포스 생성
+        //WORK UNIT 길이의 자리바꿈 맵 생성
         List<String> allColumnPermutations = Permutation.generatePermutations(workUnit);
 
         //자리바꿈 맵들로 재배치되어 복호화된 암호 후보군 리스트
@@ -46,11 +46,10 @@ public class Cracker {
 
             //힌트가 주어진 경우에는 후보군 리스트 addition을 하지 않고, hint로 시작하는 Text만 찾는다.
             if (!hint.isEmpty()) {
-                //
+                //TODO: 이것들만 있는 후보군을 모아.
                 if (sb.toString().startsWith(hint)) {
                     decodedText = sb.toString();
-                    Timer.setAfterTime(System.currentTimeMillis());
-                    return decodedText.substring(0, decodedText.length() - paddedVal); //#패딩 제거
+                    candidates.add(decodedText);
                 }
 
             } else {
@@ -61,13 +60,13 @@ public class Cracker {
         }
 
         //후보군 리스트업 완료 후, 주어진 사전 내 단어 빈도수를 체크한다.
-        decodedText = isInDictionary(candidates, paddedVal);
+        decodedText = isInDictionary(candidates);
 
         Timer.setAfterTime(System.currentTimeMillis());
         return decodedText.substring(0,decodedText.length()-paddedVal); //# 패딩 제거
     }
 
-    private static String isInDictionary(List<String> candidates, int paddedVal) {
+    private static String isInDictionary(List<String> candidates) {
 
         // 사전 내에 있는 모든 단어 리스트(특수문자를 포함한 경우는 제외한다.)
         List<String> allInDictionary = FileInDictionary.getAllInDictionary();

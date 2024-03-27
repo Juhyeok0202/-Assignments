@@ -22,6 +22,10 @@ public class Main {
     static int nonPaddedLen;
     static int paddedLen;
     public static String hint="";
+//    static final StringBuilder TEST_PLAINTEXT_PADDING = new StringBuilder("PeneusreapplauseunsquelchedgumphionsnobologistgingivitisThroopnonexperiencegamphrelzz");
+//    static final StringBuilder TEST_PLAINTEXT = new StringBuilder("PeneusreapplauseunsquelchedgumphionsnobologistgingivitisThroopnonexperiencegamphrel");
+//    static final int TEST_PADDEDLEN = 2;
+
     public static void main(String[] args) throws IOException {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -61,9 +65,13 @@ public class Main {
             String cipherText = TextBuilder.buildTransCipher(paddedPlainText, Generator.generateRandomPrivateKey(), WORK_UNIT);
 
             // password cracking
-            String foundText = Cracker.crack(cipherText, WORK_UNIT, paddedLen - nonPaddedLen);
+            String foundText = Cracker.crack(cipherText, WORK_UNIT, paddedLen-nonPaddedLen);
             if (!foundText.equals(plainText.toString())) {
-                System.out.println("크래킹 실패");
+                System.out.println("평문 : "+plainText);
+                System.out.println("복호화된 평문 : " + foundText);
+                System.out.println("암호문 : " + cipherText);
+
+                System.out.println("크래킹 실패...");
                 System.exit(0);
             }
 
@@ -71,9 +79,12 @@ public class Main {
             long time = Timer.calculateTotal();
             Recorder.addTime(time);
             System.out.println("["+execCnt+"번째]"+"경과시간(ms) : " + time);
+
+
         }
 
         System.out.println("평균 경과 시간(ms) : "+ Recorder.getAvgExecTime());
+
     }
 
 
@@ -100,6 +111,7 @@ public class Main {
         int paddedVal = paddedLen - nonPaddedLen;
         String result = Cracker.crack(cipherText, WORK_UNIT,paddedVal);
         System.out.println("DecodedText : " + result);
+        System.out.println("PlainText : " + plainText);
 
         //Validation
         if (plainText.toString().equals(result)) {
