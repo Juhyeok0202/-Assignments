@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static assignment2.caeser_cipher.Main.N;
+
 public class Cracker {
 
 //    /**
@@ -41,13 +43,11 @@ public class Cracker {
         String text = cipherText.toString();
         List<String> candidate = new ArrayList<>();
 
-        for (int i = 1; i <25; i++) { // random max value is 25
+        for (int i = 1; i <N; i++) { // random max value is N
             StringBuilder decodedText = new StringBuilder(); //  Decryption password by private key that is received input integer value
 
             for (int j = 0; j <text.length(); j++) {
-                //TODO: 디코딩도 특수문자 처리해야함.
                 char originalChar = text.charAt(j);
-//                int decodedChar = originalChar - i;
                 int decodedChar = Shifter.decodeCharWithinAlphabet(originalChar, i); //알파벳 범위에서 순회하도록 Shift
 
                 decodedText.append((char)decodedChar); // Decryption

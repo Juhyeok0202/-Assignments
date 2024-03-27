@@ -8,17 +8,20 @@ import java.util.Scanner;
 public class Main {
 
     static final String FILE_PATH = "C:/Project_files/computer_security/src/assignment2/words.txt";
-
+    static public final int N = 25; // Shift 가능한 N의 범위
     public static void main(String[] args) throws IOException {
         Scanner sc = new Scanner(System.in);
         System.out.println("한 번 실행하고 모든 결과를 확인하려면 : 1");
         System.out.println("100번 실행하고 각가의 실행 micro-sec와 평균 micro-sec값을 확인하려면 : 2");
 
         int input = sc.nextInt();
+
         if (input == 1) {
             runOnce();
-        } else {
+        } else if (input == 2) {
             runOneHundred();
+        } else {
+            System.out.println("invalid input");
         }
     }
 
@@ -27,7 +30,7 @@ public class Main {
 
         //private Key
         StringBuilder plainText = TextBuilder.buildPlainText(fileInDictionary.getWords()); // 사전의 단어를 랜덤으로 조합하여 평문을 만든다.
-        StringBuilder cipherText = TextBuilder.buildCipherText(plainText, Generator.generateRandomShiftNumber()); // 평문을 랜덤 쉬프트 값(1~25)을 이용하여 시저암호화 한다.
+        StringBuilder cipherText = TextBuilder.buildCipherText(plainText, Generator.generateRandomShiftNumber(N)); // 평문을 랜덤 쉬프트 값(1~25)을 이용하여 시저암호화 한다.
 
         System.out.println("plainText : " + plainText);
         System.out.println("cipherText: " + cipherText);
@@ -50,10 +53,10 @@ public class Main {
 
         int execCnt = 0;
 
-        while (execCnt++ < 100) {
+        while (execCnt++ < 1000) {
             //private Key
             StringBuilder plainText = TextBuilder.buildPlainText(fileInDictionary.getWords()); // 사전의 단어를 랜덤으로 조합하여 평문을 만든다.
-            StringBuilder cipherText = TextBuilder.buildCipherText(plainText, Generator.generateRandomShiftNumber()); // 평문을 랜덤 쉬프트 값(1~25)을 이용하여 시저암호화 한다.
+            StringBuilder cipherText = TextBuilder.buildCipherText(plainText, Generator.generateRandomShiftNumber(N)); // 평문을 랜덤 쉬프트 값(1~25)을 이용하여 시저암호화 한다.
 
 
             /**
@@ -66,13 +69,13 @@ public class Main {
                 long time = Timer.calculateTotal();
                 System.out.println("["+execCnt+"번째]"+"경과시간(ms) : " + time);
 
-                Recoder.addTime(time);
+                Recorder.addTime(time);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
-        System.out.println("평균 경과 시간(ms) : "+Recoder.getAvgExecTime());
+        System.out.println("평균 경과 시간(ms) : "+ Recorder.getAvgExecTime());
     }
 
     private static void showResult(StringBuilder plainText, String result) {
