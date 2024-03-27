@@ -10,8 +10,8 @@ import java.util.Random;
 
 public class FileInDictionary {
 
-    private final List<String> words; //selectRandomWords(wordList, 7, 10);
-    private final List<String> allInDictionary; //사전 내 전체 단어 리스트
+    static private List<String> words; //selectRandomWords(wordList, 7, 10);
+    static private List<String> allInDictionary; //사전 내 전체 단어 리스트
 
     protected FileInDictionary(List<String> words, List<String> allInDictionary) {
         // protected 를 통한 기본생성자 제한
@@ -24,11 +24,11 @@ public class FileInDictionary {
     }
 
     public FileInDictionary(String filePath) throws IOException {
-        this.words = initWords(filePath);
-        this.allInDictionary = getNonRandomWords(filePath);
+        words = initWords(filePath);
+        allInDictionary = getNonRandomWords(filePath);
     }
-    public List<String> getAllInDictionary() {
-        return this.allInDictionary;
+    public static List<String> getAllInDictionary() {
+        return allInDictionary;
     }
 
     public List<String> getWords() {
@@ -36,7 +36,7 @@ public class FileInDictionary {
     }
 
 
-    public List<String> initWords(String filePath) {
+    public static  List<String> initWords(String filePath) {
         String path = filePath;
         try {
             List<String> wordList = getAllInDictionaryFile(path);
@@ -54,7 +54,7 @@ public class FileInDictionary {
         return Files.readAllLines(Paths.get(filePath));
     }
 
-    private List<String> selectRandomWords(List<String> wordList, int min, int max) {
+    private static List<String> selectRandomWords(List<String> wordList, int min, int max) {
         Random random = new Random();
         List<String> selectedWords = new ArrayList<>();
         int numberOfWords = random.nextInt(max - min + 1) + min;
@@ -71,7 +71,7 @@ public class FileInDictionary {
         return selectedWords;
     }
 
-    public List<String> getNonRandomWords(String filePath) throws IOException {
+    public static List<String> getNonRandomWords(String filePath) throws IOException {
         List<String> wordList = getAllInDictionaryFile(filePath);
 
         ArrayList<String> filteredWordList = new ArrayList<>();

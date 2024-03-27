@@ -3,7 +3,7 @@ package assignment2.transposition_cipher.util;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Recoder {
+public class Recorder {
     private static List<Long> execTimes = new ArrayList<>();
 
     public static void addTime(long timeElapsed) {

@@ -1,6 +1,9 @@
 package assignment2.transposition_cipher.util;
 
 import java.util.List;
+import java.util.Scanner;
+
+import static assignment2.transposition_cipher.Main.hint;
 
 /**
  * 평문생성
@@ -25,7 +28,7 @@ public class TextBuilder {
 
 
         initMatrix(plainChars, plainMatrix); // Column replace 이전의 행렬
-        replaceMatrix(plainMatrix, privateKey); // Replaced Matrix by private Key
+        plainMatrix = replaceMatrix(plainMatrix, privateKey); // Replaced Matrix by private Key
 
         return readCipherText(plainMatrix);
     }
@@ -41,12 +44,13 @@ public class TextBuilder {
         return sb.toString();
     }
 
-    private static void replaceMatrix(char[][] plainMap, String switchSerial) {
+    private static char[][] replaceMatrix(char[][] plainMap, String switchSerial) {
         char[][] replacedMatrix = new char[COL][ROW]; // 재배치된 행렬 형태의 평문
 
         for (int i = 0; i <COL; i++) {
             replacedMatrix[i] = plainMap[switchSerial.charAt(i)-48-1];
         }
+        return replacedMatrix;
     }
 
     /**
@@ -67,7 +71,10 @@ public class TextBuilder {
     }
 
 
-    public static StringBuilder buildPlainText(List<String> words) {
+    public static StringBuilder buildPlainText(List<String> words, boolean isHint) {
+
+        if(isHint==true) hint = words.get(0);
+
         StringBuilder plainText = new StringBuilder();
         for (String word : words) {
             plainText.append(word);
@@ -80,7 +87,7 @@ public class TextBuilder {
         StringBuilder sb = new StringBuilder();
         sb.append(plainText);
         if (plainTextLength % workUnit != 0) { // work_unit으로 나누어 떨어지지 않을 경우 'z'로 padding
-            //나누어 떨어지지 않음 => z로 padding TODO: invalid paddingSize -> bruteforce활용해서 리팩토링
+            //나누어 떨어지지 않음 => z로 padding
             while (plainTextLength % workUnit != 0) {
                 sb.append('z');
                 plainTextLength = sb.length();

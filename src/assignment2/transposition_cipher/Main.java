@@ -6,43 +6,51 @@ package assignment2.transposition_cipher;
     3. ciphertext는 행-우선으로 읽어 만들어낸다.
      */
 
-import assignment2.caeser_cipher.util.FileInDictionary;
+import assignment2.transposition_cipher.util.FileInDictionary;
 import assignment2.transposition_cipher.util.Generator;
-import assignment2.transposition_cipher.util.Recoder;
+import assignment2.transposition_cipher.util.Recorder;
 import assignment2.transposition_cipher.util.TextBuilder;
 import assignment2.transposition_cipher.util.Timer;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Scanner;
+import java.io.InputStreamReader;
 
 public class Main {
     static final String FILE_PATH = "C:/Project_files/computer_security/src/assignment2/words.txt";
     static final int WORK_UNIT = 5;
     static int nonPaddedLen;
     static int paddedLen;
-
+    public static String hint="";
     public static void main(String[] args) throws IOException {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("한 번 실행하고 모든 결과를 확인하려면 : 1");
-        System.out.println("100번 실행하고 각가의 실행 nano-sec와 평균 nano-sec값을 확인하려면 : 2");
 
-        int input = sc.nextInt();
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        System.out.println("한 번 실행하고 모든 결과를 확인하려면 : 1");
+        System.out.println("100번 실행하고 각가의 실행 nano-sec와 평균 nano-sec값을 확인하려면 : 2\n");
+        int input = Integer.parseInt(br.readLine());
+
+        System.out.print("첫 단어 힌트를 드릴까요?(\"yes\" or \"no\") : ");
+        boolean isHint;
+        if(br.readLine().equals("yes")) isHint = true;
+        else isHint = false;
+
         if (input == 1) {
-            run();
+            run(isHint);
         } else {
-            runOneHundred();
+            runOneHundred(isHint);
         }
 
     }
 
-    private static void runOneHundred() throws IOException {
+    private static void runOneHundred(boolean isHint) throws IOException {
         FileInDictionary fileInDictionary = FileInDictionary.initFileInDictionary(FILE_PATH); //Text(사전)파일에서 모든 단어를 추출하여 1.평문으로 만들 단어 리스트 2.사전 내 모든 단어리스트 를 초기화 한다.
 
         int execCnt = 0;
         while (execCnt++ < 100) {
 
             //평문 생성
-            StringBuilder plainText = TextBuilder.buildPlainText(fileInDictionary.getWords());
+            StringBuilder plainText = TextBuilder.buildPlainText(fileInDictionary.getWords(), isHint);
             nonPaddedLen = plainText.length();
 
             //평문 Padding
@@ -53,38 +61,42 @@ public class Main {
             String cipherText = TextBuilder.buildTransCipher(paddedPlainText, Generator.generateRandomPrivateKey(), WORK_UNIT);
 
             // password cracking
-            int paddedVal = paddedLen - nonPaddedLen;
-            String result = Cracker.crack(cipherText, WORK_UNIT, paddedVal);
+            String foundText = Cracker.crack(cipherText, WORK_UNIT, paddedLen - nonPaddedLen);
+            if (!foundText.equals(plainText.toString())) {
+                System.out.println("크래킹 실패");
+                System.exit(0);
+            }
 
             //time pnt
             long time = Timer.calculateTotal();
-            Recoder.addTime(time);
-            System.out.println("["+execCnt+"번째]"+"경과시간(ns) : " + time);
+            Recorder.addTime(time);
+            System.out.println("["+execCnt+"번째]"+"경과시간(ms) : " + time);
         }
 
-        System.out.println("평균 경과 시간(ns) : "+Recoder.getAvgExecTime());
+        System.out.println("평균 경과 시간(ms) : "+ Recorder.getAvgExecTime());
     }
 
 
 
-    private static long run() throws IOException {
+    private static long run(boolean isHint) throws IOException {
         FileInDictionary fileInDictionary = FileInDictionary.initFileInDictionary(FILE_PATH); //Text(사전)파일에서 모든 단어를 추출하여 1.평문으로 만들 단어 리스트 2.사전 내 모든 단어리스트 를 초기화 한다.
 
         //평문 생성
-        StringBuilder plainText = TextBuilder.buildPlainText(fileInDictionary.getWords());
+        StringBuilder plainText = TextBuilder.buildPlainText(fileInDictionary.getWords(), isHint);
         nonPaddedLen = plainText.length();
-        System.out.println("Before PlainText : " + plainText + "\nsize is : " + nonPaddedLen);
+//        System.out.println("Before PlainText : " + plainText + "\nsize is : " + nonPaddedLen);
 
-        //평문 Padding
+        //평문 패딩처리
         StringBuilder paddedPlainText = TextBuilder.padding(plainText, WORK_UNIT);
         paddedLen = paddedPlainText.length();
-        System.out.println("After PlainText : " + paddedPlainText + "\nsize is : " + paddedLen);
+//        System.out.println("After PlainText : " + paddedPlainText + "\nsize is : " + paddedLen);
 
-        // Transposition Cipher
-        String cipherText = TextBuilder.buildTransCipher(paddedPlainText, Generator.generateRandomPrivateKey(), WORK_UNIT);
+        // Transposition Cipher 변환
+        String privateKey = Generator.generateRandomPrivateKey(); // 자리바꿈 맵(5자리)
+        String cipherText = TextBuilder.buildTransCipher(paddedPlainText, privateKey, WORK_UNIT);
         System.out.println("\nCipherText : " + cipherText);
 
-        // password cracking
+        // Start to Cracking
         int paddedVal = paddedLen - nonPaddedLen;
         String result = Cracker.crack(cipherText, WORK_UNIT,paddedVal);
         System.out.println("DecodedText : " + result);
@@ -94,9 +106,10 @@ public class Main {
             System.out.println("크래킹 성공!");
         } else {
             System.out.println("크래킹 실패...");
+            System.exit(0);
         }
 
-        //time pnt
+        //Time pnt
         System.out.println("경과시간(ns) : " + Timer.calculateTotal());
         return Timer.calculateTotal();
     }
